@@ -53,7 +53,7 @@ class LogController extends Controller
         }
 
         $data = $this->getTagData($tag);
-        usort($data, function ($item1, $item2) {
+        uasort($data, function ($item1, $item2) {
             return $item2['created'] <=> $item1['created'];
         });
         return $data;
