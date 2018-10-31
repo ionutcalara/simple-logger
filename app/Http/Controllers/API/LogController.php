@@ -30,6 +30,10 @@ class LogController extends Controller
         }
 
         $this->storeTag($request->all());
+        $view = $request->input('view', 'json');
+        if ($view == 'html') {
+            return view('success', ['message' => 'Success!']);
+        }
         return ['message' => 'Success!'];
     }
 
@@ -73,6 +77,7 @@ class LogController extends Controller
             $existing_data = [];
         }
         unset($data['api_token']);
+        unset($data['view']);
         $data['created'] = Carbon::now()->toIso8601String();
         $existing_data[$data['key']] = $data;
         $this->putTagData($data['tag'], $existing_data);
