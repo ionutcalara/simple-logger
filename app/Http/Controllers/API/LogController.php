@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\View;
 use Validator;
 
 class LogController extends Controller
@@ -39,7 +41,7 @@ class LogController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\JsonResponse|\Illuminate\Http\Response|\Illuminate\View\View|mixed
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function read(Request $request)
@@ -60,6 +62,25 @@ class LogController extends Controller
         uasort($data, function ($item1, $item2) {
             return $item2['created'] <=> $item1['created'];
         });
+        $view = $request->input('view', 'json');
+        if ($view == 'html') {
+            return view('report', ['data' => $data]);
+        }
+
+        if ($view == 'svg') {
+            $first_key = key($data);
+            $key = $request->input('key', 'ecommerce');
+            $label = $request->input('label', 'WooCommerce');
+            $background = $request->input('background', '555');
+            $contents = View::make('svg')->with([
+                'version' => $data[$first_key][$key],
+                'label' => $label,
+                'background' => $background
+            ]);
+            $response = Response::make($contents, 200);
+            $response->header('Content-Type', 'image/svg+xml');
+            return $response;
+        }
         return $data;
 
     }
