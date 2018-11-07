@@ -2,12 +2,24 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class LogTest extends TestCase
 {
+
+	use RefreshDatabase;
+
+	/**
+	 *
+	 */
+	public function setUp() {
+		parent::setUp();
+		Artisan::call( 'db:seed', [ '--class' => 'TestUsersTableSeeder' ] );
+	}
+
     /**
      * A basic test example.
      *

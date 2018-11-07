@@ -32,4 +32,4 @@ Laravel based api that can be used to track information in json format
 
 # Testing 
 
-* The tests will require you to set the API_TOKEN variable in env
+* Testing the application will require setup of a test database. You need to create .env.testing and add API_TOKEN variable, based on the TestUsersSeeder. Make sure you are using a test environment database as it is wiped clean for every test.
